@@ -74,4 +74,19 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+//pagination
+router.get('/page/:pageNumber', async (req, res) => {
+    try {
+        const pageSize = 10; // Number of employees per page
+        const pageNumber = parseInt(req.params.pageNumber) || 1;
+        const skip = (pageNumber - 1) * pageSize;
+
+        const employees = await Employee.find().skip(skip).limit(pageSize);
+        res.status(200).json(employees);
+    } catch (err) {
+        console.error('Error fetching employees:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 module.exports = router;    
