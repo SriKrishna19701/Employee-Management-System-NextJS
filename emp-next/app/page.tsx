@@ -1,12 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
 
+type Employee = {
+  _id: string;
+  name: string;
+  position: string;
+};
+
 export default function Home() {
-  const [employees, setEmployees] = useState([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchEmployees = async (pageNumber) => {
+  const fetchEmployees = async (pageNumber: number) => {
     const res = await fetch(
       `http://localhost:5000/api/employees?page=${pageNumber}&limit=5`
     );
