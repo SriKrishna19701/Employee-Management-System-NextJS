@@ -10,7 +10,7 @@ function connectDb() {
   }
 
   return mongoose
-    .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+    .connect(uri)
     .then(() => {
       console.log('Database has been connected successfully');
     })
