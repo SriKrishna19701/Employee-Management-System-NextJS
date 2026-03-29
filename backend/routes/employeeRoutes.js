@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
         const employees = await Employee.find().skip(skip).limit(limit);
         const totalPages = Math.max(1, Math.ceil(totalEmployees / limit));
 
-        res.status(200).json({ data: employees, totalPages });
+        res.status(200).json({ data: employees, totalPages, totalEmployees });
     } catch (err) {
         console.error('Error fetching paginated employees:', err);
         res.status(500).json({ message: 'Server error' });
