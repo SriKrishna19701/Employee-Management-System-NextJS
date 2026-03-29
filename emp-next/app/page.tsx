@@ -13,13 +13,22 @@ export default function Home() {
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchEmployees = async (pageNumber: number) => {
-    const res = await fetch(
-      `http://localhost:5000/api/employees?page=${pageNumber}&limit=5`
-    );
-    const data = await res.json();
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/employees?page=${pageNumber}&limit=5`
+      );
+      if (!res.ok) {
+        throw new Error(`Failed to load employees: ${res.status}`);
+      }
 
-    setEmployees(data.data);
-    setTotalPages(data.totalPages);
+      const data = await res.json();
+      setEmployees(data?.data ?? []);
+      setTotalPages(data?.totalPages ?? 1);
+    } catch (error) {
+      console.error('Error fetching employees:', error);
+      setEmployees([]);
+      setTotalPages(1);
+    }
   };
 
   useEffect(() => {

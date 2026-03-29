@@ -25,6 +25,25 @@ router.get('/all', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+// Get employees with pagination
+router.get('/', async (req, res) => {
+    try {
+        const page = parseInt(req.query.page, 10) || 1;
+        const limit = parseInt(req.query.limit, 10) || 10;
+        const skip = (page - 1) * limit;
+
+        const totalEmployees = await Employee.countDocuments();
+        const employees = await Employee.find().skip(skip).limit(limit);
+        const totalPages = Math.max(1, Math.ceil(totalEmployees / limit));
+
+        res.status(200).json({ data: employees, totalPages });
+    } catch (err) {
+        console.error('Error fetching paginated employees:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 // Get employee by ID
 router.get('/:id', async (req, res) => {
     try {
@@ -75,18 +94,4 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-//pagination
-router.get('/page/:pageNumber', async (req, res) => {
-    try {
-        const pageSize = 10; // Number of employees per page
-        const pageNumber = parseInt(req.params.pageNumber) || 1;
-        const skip = (pageNumber - 1) * pageSize;
-
-        const employees = await Employee.find().skip(skip).limit(pageSize);
-        res.status(200).json(employees);
-    } catch (err) {
-        console.error('Error fetching employees:', err);
-        res.status(500).json({ message: 'Server error' });
-    }
-});
 module.exports = router;    
